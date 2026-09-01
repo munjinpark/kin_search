@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>지식iN 프리미엄 수집기</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="background-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+
+  <div class="container">
+    <header class="header">
+      <h1 class="title">지식iN 프리미엄 수집기</h1>
+      <p class="subtitle">오늘 올라온 최신 질문을 실시간으로 분석하고 정리합니다</p>
+    </header>
+
+    <main class="main-content">
+      <div class="search-box">
+        <form id="searchForm" class="search-form">
+          <input type="text" id="searchInput" placeholder="주제어나 키워드를 입력하세요 (예: 신혼부부 내집마련)" />
+          <button type="submit" id="searchBtn">질문 찾기</button>
+        </form>
+        <div id="categoriesContainer" class="categories"></div>
+      </div>
+
+      <div id="errorBox" class="error-box hidden"></div>
+      <div id="resultsContainer" class="results-container hidden">
+        <div class="meta-info">
+          <div><span class="meta-label">수집 기준 시각</span><br/><span id="metaTime"></span></div>
+          <div><span class="meta-label">수집된 질문</span><br/><span id="metaCount" class="highlight-count"></span></div>
+          <div id="metaKeywords" class="keyword-tags"></div>
+        </div>
+        <div id="suggestedKeywordsBox" class="suggested-keywords-box hidden">
+          <div class="suggested-label">🔍 이 키워드로도 검색해 보세요</div>
+          <div id="suggestedKeywordsList" class="suggested-list"></div>
+        </div>
+        <div id="questionsList" class="questions-list"></div>
+      </div>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
