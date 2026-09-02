@@ -41,18 +41,16 @@ def calibrate(api_caller) -> dict:
     _cached_calibration = {'rate': rate, 'maxDocId': sample_b['maxDocId'], 'measuredAt': time.time(), 'lastBuildDate': sample_b['lastBuildDate']}
     return {'rate': rate, 'maxDocId': sample_b['maxDocId'], 'lastBuildDate': sample_b['lastBuildDate'], 'cached': False}
 
-def calculate_cutoff(rate: float, max_doc_id: int) -> dict:
+def calculate_cutoff(rate: float, max_doc_id: int, hours_ago: int = 12) -> dict:
     now_kst = datetime.now(KST)
-    total_minutes = now_kst.hour * 60 + now_kst.minute
     
-    if now_kst.hour < 7:
-        estimated = total_minutes * (rate * 0.25)
-    else:
-        estimated = (420 * (rate * 0.25)) + ((total_minutes - 420) * rate)
+    # 선택된 시간(hours_ago) * 60분 * 현재 생성률(rate)로 예상 질문 수를 계산합니다.
+    # 단순화된 계산으로, ±오차 범위가 존재합니다.
+    estimated = hours_ago * 60 * rate
 
     return {
         'cutoffDocId': int(max_doc_id - estimated),
-        'estimatedError': '±2시간',
+        'estimatedError': f'±{max(1, hours_ago // 6)}시간',
         'currentKST': now_kst.strftime('%Y-%m-%d %H:%M KST'),
         'rate': rate,
         'maxDocId': max_doc_id,

@@ -35,6 +35,7 @@ def search():
     data = request.get_json(silent=True) or {}
     query = data.get('query', '')
     custom_keywords = data.get('customKeywords')
+    time_limit = int(data.get('timeLimit', 12))
 
     if not query and not custom_keywords:
         return jsonify({'error': '검색어를 입력해주세요.'}), 400
@@ -48,17 +49,17 @@ def search():
             suggested_keywords = []
             pipeline['steps'].append({'step': 0, 'name': '검색어 입력', 'keywords': keywords, 'source': 'custom'})
         else:
-            # 확장은 추천용으로만 사용, 실제 검색은 원본 query만
+            # 연관 검색어를 실제 수집(검색)에 모두 사용
             expansion = expand_keywords(query)
-            keywords = [query]
-            # 확장된 키워드 중 원본과 다른 것만 추천으로 제공
+            keywords = expansion['keywords']
+            # 확장된 키워드 중 원본과 다른 것만 추천(화면 표시용)으로 제공
             suggested_keywords = [kw for kw in expansion['keywords'] if kw != query]
             pipeline['steps'].append({'step': 0, 'name': '검색어 입력', 'input': query, 'keywords': keywords, 'suggestedKeywords': suggested_keywords, 'source': expansion['source']})
 
         cal = calibrate(api_caller)
         pipeline['steps'].append({'step': 1, 'name': 'docId 실측', 'rate': round(cal['rate'], 2), 'maxDocId': cal['maxDocId']})
 
-        cutoff = calculate_cutoff(cal['rate'], cal['maxDocId'])
+        cutoff = calculate_cutoff(cal['rate'], cal['maxDocId'], time_limit)
         pipeline['steps'].append({'step': 2, 'name': '컷오프 계산', 'cutoffDocId': cutoff['cutoffDocId']})
 
         collect_result = collect_all(keywords, cutoff['cutoffDocId'], CLIENT_ID, CLIENT_SECRET)

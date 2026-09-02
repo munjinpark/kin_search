@@ -22,6 +22,12 @@
       <div class="search-box">
         <form id="searchForm" class="search-form">
           <input type="text" id="searchInput" placeholder="주제어나 키워드를 입력하세요 (예: 신혼부부 내집마련)" />
+          <select id="timeLimitSelect" class="time-select">
+            <option value="6">최근 6시간</option>
+            <option value="12" selected>최근 12시간</option>
+            <option value="18">최근 18시간</option>
+            <option value="24">최근 24시간</option>
+          </select>
           <button type="submit" id="searchBtn">질문 찾기</button>
         </form>
         <div id="categoriesContainer" class="categories"></div>

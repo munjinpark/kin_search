@@ -35,9 +35,10 @@ document.addEventListener('DOMContentLoaded', () => {
     suggestedBox.classList.add('hidden');
 
     try {
+      const timeLimitVal = document.getElementById('timeLimitSelect').value;
       const body = customKeywords
-        ? { query, customKeywords }
-        : { query };
+        ? { query, customKeywords, timeLimit: timeLimitVal }
+        : { query, timeLimit: timeLimitVal };
 
       const res = await fetch('/api/search', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },

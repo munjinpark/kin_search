@@ -101,6 +101,19 @@ def filter_all(items: list, search_keywords: list) -> dict:
     kept = []
     removed = []
     for item in items:
+        # 1. 제목(Title) 매칭 검사: 검색어(연관 검색어 포함) 중 하나라도 제목에 있는지 확인
+        title = item.get('title', '')
+        title_nospace = title.replace(' ', '').lower()
+        title_matched = False
+        for kw in search_keywords:
+            if kw.replace(' ', '').lower() in title_nospace:
+                title_matched = True
+                break
+        
+        if not title_matched:
+            removed.append({**item, 'removeReason': '제목에 검색어 미포함'})
+            continue
+
         faq_result = _is_faq(item, page_faq_map)
         if faq_result['isFaq']:
             removed.append({**item, 'removeReason': faq_result['reason']})
